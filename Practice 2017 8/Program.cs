@@ -8,6 +8,48 @@ namespace Practice_2017_8
 {
     class Program
     {
+        static Random Rnd=new Random();
+
+        static bool[,] ReadMatr()
+        {
+            Console.Write("Введите размерность матрицы смежности: ");
+            int n = int.Parse(Console.ReadLine());
+
+            bool[,] matr = new bool[n, n];
+
+            for (int i = 0; i < n; i++)
+            {
+                Console.WriteLine("Введите " + (i + 1) + "-ую строку элементов (через пробел, единицы или нули):");
+                string row = Console.ReadLine();
+                for (int j = 0; j < n; j++)
+                    matr[i, j] = int.Parse(row.Split(' ')[j]) == 1;
+            }
+            return matr;
+        }                 // Ввод матрицы смежности вручную
+
+        static bool[,] GenerateAdjacencyMatr()
+        {
+            int n = Rnd.Next(2, 7); // Размерность матрицы
+            bool[,] adjacencyMatr = new bool[n,n];
+
+            for (int i = 0; i < n; i++)
+                for (int j = i+1; j < n; j++)
+                    adjacencyMatr[i, j] = adjacencyMatr[j, i] = Rnd.Next(2) == 0; // Симметричное заполнение
+
+            return adjacencyMatr;
+        }    // Генерирует матрицу размернотси от 2 до 6 включительно
+
+        static void PrintMatr(bool[,] matr)
+        {
+            for (int i = 0; i < matr.GetLength(0); i++)
+            {
+                for (int j = 0; j < matr.GetLength(1); j++)
+                    Console.Write((matr[i,j] ? 1 : 0)+" ");
+                
+                Console.WriteLine();
+            }
+        }       // Вывод матрицы на экран
+
         static bool IsTree(bool[,] adjacencyMatr)
         {                   // Матрица смежности
             int edges = 0, n = adjacencyMatr.GetLength(0);      // edges - количество рёбер и n - размерность матрицы и количество вершин
@@ -24,31 +66,24 @@ namespace Practice_2017_8
                 if (onlyZeroes | edges / 2 >= n) return false;  // Если в ряду одни нули (значит граф не связный) или кол-во рёбер больше n-1 (у деревьев кол-во рёбер на 1 меньше, чем вершин), то граф не является деревом
             }
             return true;
-        }    // Проверяет является ли граф заданный матрицей смежности деревом
-
-        static bool[,] ReadAdjacencyMatr()
-        {
-            Console.Write("Введите размерность матрицы смежности: ");
-            int n = int.Parse(Console.ReadLine());
-
-            bool[,] adjacencyMatr = new bool[n, n];
-
-            for (int i = 0; i < n; i++)
-            {
-                Console.WriteLine("Введите " + (i + 1) + "-ую строку элементов (через пробел, единицы или нули):");
-                string row = Console.ReadLine();
-                for (int j = 0; j < n; j++)
-                    adjacencyMatr[i, j] = int.Parse(row.Split(' ')[j]) == 1;
-            }
-            return adjacencyMatr;
-        }           // Ввод матрицы смежности вручную
+        } // Проверяет является ли граф заданный матрицей смежности деревом
 
         static void Main(string[] args)
         {
-            Console.WriteLine(IsTree(ReadAdjacencyMatr()) ? "Заданный граф является деревом"
-                                                          : "Заданный граф не является деревом");
-            
+            Console.Write("Введите количество генерируемых тестов (размерность матриц от 2 до 6 включительно): ");
+            int testsAmount = int.Parse(Console.ReadLine());
+
+            for (int i = 0; i < testsAmount; i++)
+            {
+                bool[,] adjacencyMatr = GenerateAdjacencyMatr();
+                PrintMatr(adjacencyMatr);
+                Console.WriteLine(IsTree(adjacencyMatr) ? "Заданный граф является деревом\n"
+                                                        : "Заданный граф не является деревом\n");
+            }
+            Console.WriteLine("Теперь возможно ввести матрицу смежности графа вручную");
+            Console.WriteLine(IsTree(ReadMatr()) ? "Заданный граф является деревом\n"
+                                                        : "Заданный граф не является деревом\n");
             Console.ReadKey();
-        }
+        }           // Содержит возможность сгенерировать тесты и ввести матрицу вручную
     }
 }
