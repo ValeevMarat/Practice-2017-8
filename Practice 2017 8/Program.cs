@@ -10,23 +10,6 @@ namespace Practice_2017_8
     {
         static Random Rnd=new Random();
 
-        static bool[,] ReadMatr()
-        {
-            Console.Write("Введите размерность матрицы смежности: ");
-            int n = int.Parse(Console.ReadLine());
-
-            bool[,] matr = new bool[n, n];
-
-            for (int i = 0; i < n; i++)
-            {
-                Console.WriteLine("Введите " + (i + 1) + "-ую строку элементов (через пробел, единицы или нули):");
-                string row = Console.ReadLine();
-                for (int j = 0; j < n; j++)
-                    matr[i, j] = int.Parse(row.Split(' ')[j]) == 1;
-            }
-            return matr;
-        }                 // Ввод матрицы смежности вручную
-
         static bool[,] GenerateAdjacencyMatr()
         {
             int n = Rnd.Next(2, 7); // Размерность матрицы
@@ -68,10 +51,10 @@ namespace Practice_2017_8
             return true;
         } // Проверяет является ли граф заданный матрицей смежности деревом
 
-        static void Main(string[] args)
+        static void StartTesting()
         {
             Console.Write("Введите количество генерируемых тестов (размерность матриц от 2 до 6 включительно): ");
-            int testsAmount = int.Parse(Console.ReadLine());
+            int testsAmount = Read.Natural();
 
             for (int i = 0; i < testsAmount; i++)
             {
@@ -80,10 +63,12 @@ namespace Practice_2017_8
                 Console.WriteLine(IsTree(adjacencyMatr) ? "Заданный граф является деревом\n"
                                                         : "Заданный граф не является деревом\n");
             }
-            Console.WriteLine("Теперь возможно ввести матрицу смежности графа вручную");
-            Console.WriteLine(IsTree(ReadMatr()) ? "Заданный граф является деревом\n"
-                                                        : "Заданный граф не является деревом\n");
             Console.ReadKey();
-        }           // Содержит возможность сгенерировать тесты и ввести матрицу вручную
+        }                // Генерирует заданное кол-во тестов
+    
+        static void Main(string[] args)
+        {
+            StartTesting();
+        }           // Вызывает функции по тестированию
     }
 }
